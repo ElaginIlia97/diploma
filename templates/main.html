@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основная страница</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
+	<link rel="stylesheet" href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>	
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+	<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="../static/js/main.js"></script>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container-fluid h-100" id="grad1">
+        <div class="row justify-content-center mt-0 w-100">
+            <div class="col-12 col-sm-12 col-md-10 col-lg-7 text-center p-0 mt-3 mb-5">
+                <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                    <h2><strong>Меню формирования рекомендованного метода</strong></h2>
+                    <div class="row">
+                        <div class="col-md-12 mx-0">
+                            <form id="msform" action="/main" method="POST">
+                                <!-- progressbar -->
+
+                                <ul id="progressbar">
+                                    <li class="active" id="account"><strong>Пользователи</strong></li>
+                                    <li id="personal"><strong>Задача</strong></li>
+                                    <li id="payment"><strong>Данные</strong></li>
+                                    <li id="confirm"><strong>Рекомендация</strong></li>
+                                </ul> <!-- fieldsets -->
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title text-center">Добавление пользователей в проект</h2> 
+                                        <div class="row mt-5">
+                                            <div class="col-4 pl-5">
+                                                {{ user_form.csrf_token }}
+                                                {{ user_form.have_users }}
+                                            </div>
+                                            <div class="users-select col-8 pl-5 text-center">
+                                                {{ user_form.users(multiple=True) }}
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <input type="button" name="next" class="next action-button" value="Далее" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title text-center">Задача</h2> 
+                                        <div class="row">
+                                            <input type="text" name="task_description">
+                                        </div>
+                                        <div class="row mt-5 ">
+                                            <div class="col-6 ml-3">
+                                                <p >Выберите тип задачи</p>
+                                            </div>
+                                            <div class="col ml-3">
+                                                <p class="classification_task">Количество классов</p>
+                                                <p class="regression_task">Количество полей</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 ml-3">
+                                                {{ task_form.csrf_token }}
+                                                {{ task_form.task_type }}
+                                            </div>
+                                            <div class="col ml-3">
+                                                <div class="classification_task">
+                                                    {{ task_form.classific_classes }}
+                                                </div>
+                                                <div class="regression_task">
+                                                    {{ task_form.regres_fields }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <input type="button" name="previous" class="previous action-button-previous" value="Назад" /> 
+                                    <input type="button" name="next" class="next action-button method_button" value="Далее" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card">
+                                        <h2 class="fs-title text-center">Параметры данных</h2>
+                                        <div class="row mt-5">
+                                            <div class='col-6 ml-3'>
+                                                <p>Наличие выбросов</p>
+                                                {{ data_charact_form.csrf_token }}
+                                                {{ data_charact_form.outliers }}
+                                            </div>
+
+                                            <div class='col ml-3'>
+                                                <p>Количество данных</p>
+                                                {{ data_charact_form.data_rows }}
+                                            </div>
+                                        </div>
+                                        <div class="row mt-5">
+                                            <div class='col-6 ml-3'>
+                                                <p>Количество фитч</p>
+                                                {{ data_charact_form.data_features }}
+                                            </div>
+
+                                            <div class='col ml-3'>
+                                                <p>Категориальные данные</p>
+                                                {{ data_charact_form.categorical_data }}
+                                            </div>
+                                        </div>
+                                        <div class="row mt-5">
+                                            <div class='col-6 ml-3'>
+                                                <p>Пустые значения</p>
+                                                {{ data_charact_form.blank_data }}
+                                            </div>
+
+                                            <div class='col ml-3 class_imbalance'>
+                                                <p>Неоднородность классов</p>
+                                                {{ data_charact_form.class_imbalance }}
+                                            </div>
+                                        </div>
+                                    </div>    
+                                    <input type="button" name="previous" class="previous action-button-previous" value="Назад" /> 
+                                    <input type="button" name="next" class="next action-button" id="btn-results" value="Результаты" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-card ">
+                                        <h2 class="fs-title text-center">Рекомендация</h2>
+                                        <div class="row justify-content-center">
+                                            <h4 style="width: 90%; margin-top: 10px">Вывод на основе данных:</h4>
+                                            <div class="results">
+                                                <p id='results_method_p'>Данные не введены</p>
+                                                <input type="text" class="results_method_input recommend_method d-none" id ="recommend_method" name='recommend_method'>
+                                                <input type="text" class="results_method_input recommend_tool d-none" id="recommend_tool" name='recommend_tool'>
+                                                <input type="text" class="results_method_input link d-none" id="link" name='link'>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <h4 style="width: 90%; margin-top: 10px">Вывод на основе уровня пользователя:</h4>
+                                            <div class="results">
+                                                <p id='results_instrument_p'>Данные не введены</p>
+                                                <input type="text" class="results_instrument_input d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="button" name="previous" class="previous action-button-previous" value="Назад" /> 
+                                    <input type="submit" name="make_payment" class="next action-button" value="Сохранить" />
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $('.users-select').hide();
+
+        $('.method_button').attr('disabled', true);
+
+        $('#have_users').on('change' , function() {
+            if ($(this).val() == 2) {
+                $('.users-select').show();
+            } else {
+                $('.users-select').hide();
+
+            }
+        })
+        
+        $('.classification_task').hide()
+        $('.regression_task').hide()
+
+        $('#task_type').on('change', function() {
+
+            $('.method_button').attr('disabled', false);
+
+            if ($(this).val() == 1){
+                $('.class_imbalance').hide()
+                $('.classification_task').hide()
+            }
+            if ($(this).val() == 2){
+                $('.classification_task').show()
+                $('.regression_task').hide()
+                $('.class_imbalance').show()
+            }
+        })
+
+
+        $('#btn-results').on('click', function() {
+
+            var task_type = $('#task_type').val()
+            var outliers = $('#outliers').val()
+            var data_rows = $('#data_rows').val()
+            var data_features = $('#data_features').val()
+            var class_imbalance = $('#class_imbalance').val()
+            var categorical_data = $('#categorical_data').val()
+            var blank_data = $('#blank_data').val()
+
+
+            if (task_type != '') {
+                var data = {
+                    'task_type': task_type,
+                    'outliers': outliers,
+                    'data_rows': data_rows,
+                    'data_features': data_features,
+                    'class_imbalance': class_imbalance,
+                    'categorical_data': categorical_data,
+                    'blank_data': blank_data
+                }
+
+            $.ajax({
+                type: "POST",
+                url: window.origin + '/task_data',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                dataType: "json",
+                success: function(data){
+                    var obj = JSON.parse(JSON.stringify(data));
+                    $('#results_method_p').html(obj.advices + obj.best_method);
+                    $('#results_instrument_p').html(obj.ml_tool + '<br>' + '<a href = ' + obj.tool_link + ' target="_blank">Ссылка для перехода</a>');
+
+                    $('#recommend_method').val(obj.best_method)
+                    $('#recommend_tool').val(obj.ml_tool)
+                    $('#link').val(obj.tool_link)
+
+                    console.log($('#recommend_method').val())
+                    console.log($('#recommend_tool').val())
+                    console.log($('#link').val())
+
+                },
+                error: function(error){
+                    console.log('Errrorrrr');
+                    console.log(error);
+                }
+            })
+            } 
+        })
+
+    </script>
+</body>
+</html>

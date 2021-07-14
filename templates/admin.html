@@ -1,0 +1,124 @@
+{% extends "header.html" %}
+
+{% block links %}
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="../static/css/admin.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="../static/css/admin.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+<div class="row w-100">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title text-uppercase mb-0">Управление пользователями</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table no-wrap user-table mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="border-0 text-uppercase font-medium pl-4">#</th>
+                      <th scope="col" class="border-0 text-uppercase font-medium">ID</th>
+                      <th scope="col" class="border-0 text-uppercase font-medium">Логин</th>
+                      <th scope="col" class="border-0 text-uppercase font-medium">Email</th>
+                      <th scope="col" class="border-0 text-uppercase font-medium">Дата регистрации</th>
+                      <th scope="col" class="border-0 text-uppercase font-medium">Роли</th>
+                      <th scope="col" class="border-0 text-uppercase font-medium">Управление</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% include 'admin_user_change.html' %}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+
+<script>
+    function init(element) {
+        $('[data-toggle="tooltip"]', element).tooltip( )
+        // Нажатие кнопки Edit
+        $('.btn-edit-user', element).on('click', function() {
+            var user_name = $(this).closest('tr').find('.user-name').text();
+            var user_roles = $(this).closest('tr').find('#roles').val();
+            var user_id = $(this).data('user-id');
+            var edit_btn = $(this);
+            data = {
+                        'user_id': user_id,
+                        'user_roles': user_roles
+                    }
+            $('.modal-ins-user-name').html(user_name);
+            $("#user-edit-modal").modal('show');
+            $('#modal-user-edit').on('click', function() {
+                $.ajax({
+                    type: "POST",
+                    url: window.origin + '/admin/user_edit',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    dataType: "html",
+                    success: function(response_html){
+                        $('div .tooltip, .show').remove()
+                        $('.table-responsive tbody').html(response_html);
+                        $('.selectpicker').selectpicker("refresh");
+                        init($('.table-responsive tbody'));
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                })
+                $("#exampleModalCenter").modal('hide');
+            })
+        })
+
+        // Удаляю пользователя 
+        // Кнопка удалить
+        $('.btn-delete-user', element).on('click', function() {
+        
+            var user_name = $(this).closest('tr').find('.user-name').text();
+            var user_id = $(this).data('user-id')
+            var del_btn = $(this)
+            $('.modal-ins-user-name').html(user_name)
+            $("#user-delete-modal").modal('show');
+            $('#modal-user-delete').on('click', function() {
+                $.ajax({
+                    type: "DELETE",
+                    url: window.origin + '/admin/delete/' + user_id,
+                    dataType: "html",
+                    success: function(response_html){
+                        $('div .tooltip, .show').remove()
+                        $('.table-responsive tbody').html(response_html);
+                        $('.selectpicker').selectpicker("refresh");
+                        init($('.table-responsive tbody'));
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                })
+                $("#exampleModalCenter").modal('hide');
+            })
+        })
+    }
+    $(function () {
+        init($('html'));
+    })
+</script>
+
+{% endblock %}

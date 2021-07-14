@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>	
+
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script> -->
+	<!-- <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script> -->
+    {% block links %} {% endblock %}
+    <title>{{ Title }}</title>
+</head>
+<body>
+    <nav style="width: 100%;">
+        <label for="check" class="checkbtn">
+          <i class="fas fa-bars"></i>
+        </label>
+        <label class="logo">Монитор исследований</label>
+        <ul class="header-links">
+            {% if not current_user.is_authenticated %}
+                <li><a href="{{ url_for('auth.login') }}">Войти</a></li>
+                <li><a href="{{ url_for('auth.signup') }}">Зарегистрироваться</a></li>
+            {% endif %}
+
+            {% if current_user.is_authenticated %}
+                {% for role in current_user.roles %}
+                    {% if role.name == 'admin' %}
+                        <li><a href="{{ url_for('auth.admin') }}">Сервис</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('main.main_page') }}">Основная страница</a></li>
+                <li><a href="{{ url_for('main.history') }}">История</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Выйти</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <script>
+        // Убираю ссылку в Хереде на страницу на которой нахожусь
+        $(function() {
+            $('.header-links li').each(function(i, obj) {
+                if ($(this).children().attr('href') == window.location.pathname){
+                    $(this).children().css({'display': 'none'});
+                }
+            })
+        });
+    </script>
+    {% block content %} {% endblock %}
+    {% block script %} {% endblock %}
+</body>
+</html>

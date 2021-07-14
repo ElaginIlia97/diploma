@@ -1,0 +1,78 @@
+{% for user in users %}
+<tr>
+    <td>
+        <h5>{{loop.index}}</h5>
+    </td>
+    <td>
+        <h5>{{user.id}}</h5>
+    </td>
+    <td>
+        <h5 class='user-name'>{{user.name}}</h5>
+    </td>
+    <td>
+        <h5>{{user.email}}</h5>
+    </td>
+    <td>
+        <h6>{{ user.create_datetime.astimezone(local_timezone).strftime("%Y-%m-%d") }} 
+            <br> {{ user.create_datetime.astimezone(local_timezone).strftime("%H:%M:%S") }}</h6>
+    </td>
+    <td style="min-width: 13rem;">
+        <h5>{{ user_forms[loop.index-1].csrf_token }}
+            {{ user_forms[loop.index-1].roles(multiple=True) }} </h5>
+    </td>
+    <td>
+        <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle btn-edit-user" 
+                                data-toggle="tooltip" data-placement="bottom" data-user-id = {{ user.id }} 
+                                title="Edit"><i class="fa fa-pencil-square-o"></i> </button>
+        <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2 btn-delete-user" 
+                                data-toggle="tooltip" data-placement="bottom" data-user-id = {{ user.id }} 
+                                title="Delete"><i class="fa fa-trash"></i> </button>
+    </td>
+</tr>
+{% endfor %}
+
+<!-- Modal for user delete -->
+<div class="modal fade" id="user-delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Удаление пользователя</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Вы действительно хотите удалить пользователя <ins class="modal-ins-user-name"></ins></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-primary" id='modal-user-delete'>Удалить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for user edit -->
+<div class="modal fade" id="user-edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Удаление пользователя</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Изменить роли для пользователя <ins class="modal-ins-user-name"></ins></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-primary" id='modal-user-edit'>Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  

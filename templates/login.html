@@ -1,0 +1,63 @@
+{% extends "header.html" %}
+
+{% block links %}
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+{% endblock %}
+
+{% block content %}
+  <section class="hero is-info is-fullheight">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <h1 style="font-size: 2.5rem"> Вход в систему </h1>
+            </div>
+        </div>
+    </div>
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-half">
+            {% with message = get_flashed_messages() %}
+            {% if message%}
+              <div class="notification is-danger">
+                {{message[0]}}
+              </div>
+            {% endif %}
+            {% endwith %}
+            
+            <form action = "/login" method="POST">
+              <div class="field">
+                <label class="label">Логин</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input class="input" type="text" name="username" placeholder="Логин" required>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Пароль</label>
+                <p class="control has-icons-left">
+                  <input class="input" type="password" name="password" placeholder="Пароль" required>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control">
+                  <button type="submit" class="button is-success">
+                    Войти
+                  </button>
+                </p>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
